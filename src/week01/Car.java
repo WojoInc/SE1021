@@ -24,7 +24,7 @@ public class Car extends Vehicle {
      * @param color the color of the Car
      * @param modelYear the model year of the Car
      */
-    public Car(String make, String model, String color, int modelYear) {
+    public Car(Make make, String model, String color, int modelYear) {
         super(make, model, color, modelYear);
     }
 }

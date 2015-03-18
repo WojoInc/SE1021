@@ -9,7 +9,7 @@ package week01;
  * Created by wesolowskitj on 2/11/2015 at 3:04 PM.
  */
 public class Vehicle {
-    private String make;
+    private Make make;
     private String model;
     private int modelYear;
     private String color;
@@ -20,7 +20,7 @@ public class Vehicle {
      * @return the make of the vehicle
      */
     public String getMake() {
-        return make;
+        return make.toString();
     }
 
     /**
@@ -59,7 +59,7 @@ public class Vehicle {
      * sets the vehicle make
      * @param make the vehicle make to set
      */
-    public void setMake(String make) {
+    public void setMake(Make make) {
         this.make = make;
     }
 
@@ -109,7 +109,7 @@ public class Vehicle {
      * default constructor for the Vehicle class. Initializes all values to defaults.
      */
     public Vehicle(){
-        new Vehicle("","","",0);
+        new Vehicle(null,"","",0);
     }
 
     /**
@@ -119,7 +119,7 @@ public class Vehicle {
      * @param color the color of the vehicle
      * @param modelYear the model year of the vehicle
      */
-    public Vehicle(String make, String model, String color, int modelYear) {
+    public Vehicle(Make make, String model, String color, int modelYear) {
         this.make = make;
         this.model = model;
         this.color = color;

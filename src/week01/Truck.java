@@ -34,7 +34,7 @@ public class Truck extends Vehicle {
      * @param engineType the engine type of the truck
      * @param modelYear the model year of the truck
      */
-    public Truck(String make, String model, String color, EngineType engineType,int modelYear) {
+    public Truck(Make make, String model, String color, EngineType engineType,int modelYear) {
         super(make, model, color, modelYear);
         this.engineType = engineType;
     }
