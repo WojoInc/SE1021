@@ -16,8 +16,8 @@ public class DealershipDriver {
     public static ArrayList<Vehicle> setInitialInventory(){
         Car car1 = new Car("Chevrolet","Camaro","Yellow",1975);
         Car car2 = new Car("Lamborghini","Murcielago","Black",2011);
-        Truck truck1 = new Truck("Ford","F-150","Black","Diesel",2007);
-        Truck truck2 = new Truck("Chevrolet","Silverado","Blue","Gas",2005);
+        Truck truck1 = new Truck("Ford","F-150","Black",EngineType.DIESEL,2007);
+        Truck truck2 = new Truck("Chevrolet","Silverado","Blue",EngineType.GAS,2005);
         ArrayList<Vehicle> inventory = new ArrayList<Vehicle>();
         inventory.add(car1);
         inventory.add(car2);

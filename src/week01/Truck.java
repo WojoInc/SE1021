@@ -8,8 +8,7 @@ package week01;
  * Created by wesolowskitj on 2/11/2015 at 3:33 PM.
  */
 public class Truck extends Vehicle {
-    private String engineType;
-
+    private EngineType engineType;
     /**
      * Overrides the Vehicle toString() method.
      * @return the formatted string representing the Truck instance
@@ -24,7 +23,7 @@ public class Truck extends Vehicle {
      * @return the engine type
      */
     public String getEngineType(){
-        return engineType;
+        return engineType.toString();
     }
 
     /**
@@ -35,7 +34,7 @@ public class Truck extends Vehicle {
      * @param engineType the engine type of the truck
      * @param modelYear the model year of the truck
      */
-    public Truck(String make, String model, String color, String engineType,int modelYear) {
+    public Truck(String make, String model, String color, EngineType engineType,int modelYear) {
         super(make, model, color, modelYear);
         this.engineType = engineType;
     }
