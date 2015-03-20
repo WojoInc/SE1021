@@ -10,6 +10,8 @@ package week02;
  */
 public class CardGameDriver {
     public static void main(String[] args) {
+        Suit newSuit = Suit.CLUBS;
+        System.out.println(newSuit.toString());
 
     }
 }
