@@ -29,6 +29,10 @@ public enum CardValue{
         this.valString = valString;
     }
 
+    public int getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return valString;
