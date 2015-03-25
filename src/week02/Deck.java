@@ -18,14 +18,16 @@ public class Deck extends GroupOfCards {
         }
     }
     public void shuffle(){
-        Card temp;
-        int current;
+        Card temp, temp2;
+        int card1, card2;
         Random generator = new Random();
-        for(int i=0; i<78; i++){
-            current = generator.nextInt(51);
-            temp = cards.get(current);
-            cards.remove(current);
-            addCard(temp);
+        for(int i=0; i<2704; i++){
+            card1 = generator.nextInt(cards.size() -1);
+            card2 = generator.nextInt(cards.size() -1);
+            temp = cards.get(card1);
+            temp2 = cards.get(card2);
+            cards.set(card2, temp);
+            cards.set(card1, temp2);
         }
     }
     public Card dealCard(){

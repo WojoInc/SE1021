@@ -2,7 +2,7 @@ package week02;
 
 /**
  * Labs 1011-011
- * Purpose:
+ * Purpose: To hold the possible values for the Card class, along with their integer values and string names.
  *
  * @author wesolowskitj
  * @version 1.0 Created on 3/20/2015 at 1:02 PM
@@ -24,15 +24,29 @@ public enum CardValue{
     ACE (11,"Ace");
     private final int value;
     private final String valString;
+
+    /**
+     * Creates each enumerator with both an integer value and string
+     * @param CardVal the value of the card
+     * @param valString the String literal of the cards value
+     */
     CardValue(int CardVal, String valString){
         this.value = CardVal;
         this.valString = valString;
     }
 
+    /**
+     * returns the integer value of the enumerator
+     * @return the integer value
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Returns the string representing the enumerators value
+     * @return the string
+     */
     @Override
     public String toString() {
         return valString;

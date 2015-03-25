@@ -12,6 +12,11 @@ import java.util.ArrayList;
 public class GroupOfCards {
     protected ArrayList<Card> cards = new ArrayList<Card>();
     protected int currentSize;
+
+    /**
+     * adds a card object to the array, or group, of cards
+     * @param card the card object to be added
+     */
     public void addCard(Card card){
         cards.add(card);
     }
