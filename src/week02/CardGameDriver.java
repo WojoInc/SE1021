@@ -5,11 +5,10 @@ import week01.Banner;
 import javax.swing.*;
 
 /**
- * Purpose:
+ * Purpose: To simulate a simple version of the card game War by practicing extension and inheritance.
  *
  * @author:wesolowskitj
  * @version: 1.1
- * <p/>
  * Created by wesolowskitj on 3/18/2015 at 3:30 PM.
  */
 public class CardGameDriver {
@@ -22,6 +21,9 @@ public class CardGameDriver {
     static Card card2;
     static int round;
 
+    /**
+     * Instantiates variables and displays banner.
+     */
     public static void initGame(){
         Banner welcome = new Banner("War","This program will simulate the card game war between two computer-based players", "wesolowskitj");
         JOptionPane.showMessageDialog(null,welcome);
@@ -36,6 +38,10 @@ public class CardGameDriver {
             player2.addCard(deck.dealCard());
         }
     }
+
+    /**
+     * The main game code that simulates a simplified version of the card game War.
+     */
     public static void mainGame(){
         while(player1.numCards >0 && player2.numCards>0){
             card1 = player1.playACard();

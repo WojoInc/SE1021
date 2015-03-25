@@ -4,12 +4,15 @@ import java.util.Random;
 
 /**
  * Labs 1011-011
- * Purpose:
+ * Purpose:Extends GroupOfCards to represent a deck of 52 cards.
  *
  * @author wesolowskitj
  * @version 1.0 Created on 3/20/2015 at 12:05 PM
  */
 public class Deck extends GroupOfCards {
+    /**
+     * creates a deck of 52 cards by iterating through enumerators
+     */
     public Deck() {
         for(Suit suit: Suit.values()) {
             for(CardValue val: CardValue.values()){
@@ -17,6 +20,10 @@ public class Deck extends GroupOfCards {
             }
         }
     }
+
+    /**
+     * psuedo-randomly shuffles the card objects in the deck
+     */
     public void shuffle(){
         Card temp, temp2;
         int card1, card2;
@@ -30,12 +37,22 @@ public class Deck extends GroupOfCards {
             cards.set(card1, temp2);
         }
     }
+
+    /**
+     * returns a card object from the deck and then removes that card from the deck
+     * @return the card object
+     */
     public Card dealCard(){
         Card temp;
         temp = cards.get(cards.size()-1);
         cards.remove(cards.size()-1);
         return temp;
     }
+
+    /**
+     * test driver for the class
+     * @param args
+     */
     public static void main(String[] args) {
         Deck newDeck = new Deck();
         newDeck.display();
