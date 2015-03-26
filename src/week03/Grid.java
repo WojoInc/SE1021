@@ -1,5 +1,7 @@
 package week03;
 
+import week01.Car;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,40 +26,55 @@ public class Grid extends JFrame {
     private EventHandler handler;
     private JLabel label,label2,label3;
     private final GridLayout layout = new GridLayout(3,3);
-
+    private Container container;
+    private ArrayList<JButton> gridButtons;
 
     public Grid(){
-        Container container = getContentPane();
+
         setDefaults();
-        handler = new EventHandler();
-        label = new JLabel("Test");
-        label2 = new JLabel("Test2");
-        label3 = new JLabel("Test3");
-        ArrayList<JButton> testButtons = new ArrayList<JButton>();
+        populateGrid();
+        setVisible(true);
+    }
+    private void populateGrid(){
+         gridButtons = new ArrayList<JButton>();
         for(int i =0; i<9; i++){
             JButton button = new JButton();
             button.setName("Grid spot " +i);
-            testButtons.add(button);
+            button.setText("");
+            button.setFont(button.getFont().deriveFont(Font.BOLD,70));
+            gridButtons.add(button);
         }
-        container.setLayout(new GridLayout(3, 3));
-        //testButton.addActionListener(handler);
-        for(JButton button: testButtons){
+
+        for(JButton button: gridButtons){
             button.addActionListener(handler);
             container.add(button);
         }
-
-        setVisible(true);
     }
     private void setDefaults(){
         setTitle("Test");
         setSize(FRAME_WIDTH,FRAME_HEIGHT);
+        container = getContentPane();
+        container.setLayout(new GridLayout(3, 3));
+        handler = new EventHandler();
+    }
+    private void setButtonValue(JButton button){
 
+        if(button.getText().equals("")){
+            button.setText("X");
+        }
+        else if(button.getText().equals("X")){
+            button.setText("O");
+        }
+        else{
+            button.setText("");
+        }
     }
     private class EventHandler implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() instanceof JButton){
                 setTitle("You clicked " + ((JButton) e.getSource()).getName());
+                setButtonValue((JButton) e.getSource());
             }
         }
     }
