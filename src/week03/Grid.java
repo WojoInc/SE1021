@@ -1,14 +1,10 @@
 package week03;
 
-import week01.Car;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.jar.JarFile;
 
 /**
  * Purpose:
@@ -23,6 +19,9 @@ public class Grid extends JFrame {
     private final int FRAME_WIDTH = 600;
     private final int GRID_HEIGHT = 30;
     private final int GRID_WIDTH = 30;
+    private java.awt.MenuBar mb;
+    private java.awt.Menu optionsMenu;
+    private java.awt.MenuItem reset;
     private EventHandler handler;
     private final GridLayout layout = new GridLayout(3,3);
     private Container container;
@@ -30,32 +29,62 @@ public class Grid extends JFrame {
     private Player player;
 
     public Grid(){
-        setDefaults();
+        initFrame();
         populateGrid();
         setVisible(true);
     }
     private void checkWin(int gridSpot){
         boolean[] buttons = new boolean[9];
         int i=0;
+        int draw=0;
         for(JButton button: gridButtons){
             if(button.getText().equals(player.getMarker())){
                 buttons[i] = true;
+                draw++;
             }
             i++;
         }
         for(int j = 0; j<3; j++) {
             if (buttons[j] && buttons[j+3] && buttons[j+6]){
                 JOptionPane.showMessageDialog(this,player.getName() + " Wins");
-                populateGrid();
+                gridState(false);
             }
         }
         for(int k = 0; k<7; k+=3){
             if (buttons[k] && buttons[k+1] && buttons[k+2]){
-                JOptionPane.showMessageDialog(this,player.getName() + " Wins");
-                populateGrid();
+                JOptionPane.showMessageDialog(this, player.getName() + " Wins");
+                gridState(false);
+            }
+        }
+        if(buttons[0] && buttons[4] && buttons[8]){
+            JOptionPane.showMessageDialog(this,player.getName() + " Wins");
+            gridState(false);
+        }
+        if(buttons[2] && buttons[4] && buttons[6]){
+            JOptionPane.showMessageDialog(this,player.getName() + " Wins");
+            gridState(false);
+        }
+        if(draw==5){
+            JOptionPane.showMessageDialog(this,"The only way to win is not to play...");
+            gridState(false);
+
+        }
+
+    }
+    private void gridState(boolean state){
+        for (Component component : getContentPane().getComponents()) {
+            if (component instanceof JButton) {
+                ((JButton) component).setEnabled(state);
             }
         }
 
+    }
+    private void resetGrid(){
+        for(Component component: getContentPane().getComponents()){
+            if(component instanceof JButton)
+                ((JButton) component).setText("");
+                ((JButton) component).setEnabled(true);
+        }
     }
     private void populateGrid(){
          gridButtons = new ArrayList<JButton>();
@@ -72,9 +101,22 @@ public class Grid extends JFrame {
             container.add(button);
         }
     }
-    private void setDefaults(){
+    private void initFrame(){
+        optionsMenu = new Menu("Options");
+        mb = new MenuBar();
+        reset = new MenuItem("Reset...");
+        reset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetGrid();
+            }
+        });
+        optionsMenu.add(reset);
+        mb.add(optionsMenu);
+        setMenuBar(mb);
         setTitle("Test");
-        setSize(FRAME_WIDTH,FRAME_HEIGHT);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
+
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         container = getContentPane();
         container.setLayout(new GridLayout(3, 3));

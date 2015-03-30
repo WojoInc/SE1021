@@ -1,5 +1,7 @@
 package week03;
 
+import week01.Banner;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -19,11 +21,14 @@ public class TicTacToe {
     private static Grid grid;
     private static X x;
     private static O o;
+    public static void initGame(){
+        x = new X(JOptionPane.showInputDialog("Please input the name of player 1 (X)"));
+        o = new O(JOptionPane.showInputDialog("Please input the name of player 2 (O)"));
+    }
     public static void main(String[] args) {
+        initGame();
         eventHandler = new EventHandler();
         grid = new Grid();
-        x = new X("Player 1");
-        o = new O("Player 2");
         x.addChangeListener(eventHandler);
         o.addChangeListener(eventHandler);
         grid.setActivePlayer(x);
