@@ -19,19 +19,18 @@ public class Grid extends JFrame {
     private final int FRAME_WIDTH = 600;
     private final int GRID_HEIGHT = 30;
     private final int GRID_WIDTH = 30;
-    private java.awt.MenuBar mb;
+    private GameMenu mb;
     private java.awt.Menu optionsMenu;
     private java.awt.MenuItem reset;
+
     private EventHandler handler;
     private final GridLayout layout = new GridLayout(3,3);
     private Container container;
     private ArrayList<JButton> gridButtons;
+    private ArrayList<Player> players;
     private Player player;
 
     public Grid(){
-        initFrame();
-        populateGrid();
-        setVisible(true);
     }
     private void checkWin(int gridSpot){
         boolean[] buttons = new boolean[9];
@@ -77,7 +76,6 @@ public class Grid extends JFrame {
                 ((JButton) component).setEnabled(state);
             }
         }
-
     }
     private void resetGrid(){
         for(Component component: getContentPane().getComponents()){
@@ -101,9 +99,9 @@ public class Grid extends JFrame {
             container.add(button);
         }
     }
-    private void initFrame(){
+    public void initFrame(){
+        mb = new GameMenu(players);
         optionsMenu = new Menu("Options");
-        mb = new MenuBar();
         reset = new MenuItem("Reset...");
         reset.addActionListener(new ActionListener() {
             @Override
@@ -116,14 +114,18 @@ public class Grid extends JFrame {
         setMenuBar(mb);
         setTitle("Test");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         container = getContentPane();
         container.setLayout(new GridLayout(3, 3));
         handler = new EventHandler();
+        populateGrid();
+        setVisible(true);
     }
-    public void setActivePlayer(Player player){
-        this.player = player;
+    public void setPlayers(ArrayList<Player> players){
+        this.players = players;
+    }
+    public void setActivePlayer(int player){
+        this.player = players.get(player);
     }
     public Player getActivePlayer(){
         return this.player;

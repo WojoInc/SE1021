@@ -7,6 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.EventListener;
 
 /**
  * Purpose:
@@ -17,32 +20,26 @@ import java.awt.event.ActionListener;
  * Created by wesolowskitj on 3/25/2015 at 3:15 PM.
  */
 public class TicTacToe {
-    private static EventHandler eventHandler;
+    private static TurnListener eventHandler;
     private static Grid grid;
-    private static X x;
-    private static O o;
-    public static void initGame(){
-        x = new X(JOptionPane.showInputDialog("Please input the name of player 1 (X)"));
-        o = new O(JOptionPane.showInputDialog("Please input the name of player 2 (O)"));
-    }
-    public static void main(String[] args) {
-        initGame();
-        eventHandler = new EventHandler();
-        grid = new Grid();
-        x.addChangeListener(eventHandler);
-        o.addChangeListener(eventHandler);
-        grid.setActivePlayer(x);
+    private static ArrayList<Player> players;
+    public static void initPlayers(){
+        players = new ArrayList<Player>();
+        players.add(new X(JOptionPane.showInputDialog("Please input the name of player 1 (X)")));
+        players.add(new O(JOptionPane.showInputDialog("Please input the name of player 2 (O)")));
+        eventHandler = new TurnListener(grid);
+        players.get(0).addTurnListener(eventHandler);
+        players.get(1).addTurnListener(eventHandler);
 
     }
-    public static class EventHandler implements ChangeListener{
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            if(grid.getActivePlayer().getMarker() == "O"){
-                grid.setActivePlayer(x);
-            }
-            else{
-                grid.setActivePlayer(o);
-            }
-        }
+    public static void initGrid(){
+        grid.setPlayers(players);
+        grid.setActivePlayer(0);
+        grid.initFrame();
+    }
+    public static void main(String[] args) {
+        grid = new Grid();
+        initPlayers();
+        initGrid();
     }
 }
