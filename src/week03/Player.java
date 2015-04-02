@@ -26,6 +26,11 @@ public class Player{
     public void addTurnListener(TurnListener listener){
         this.turnListener = listener;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName(){
         return name;
     }

@@ -21,6 +21,7 @@ public class Grid extends JFrame {
     private final int GRID_WIDTH = 30;
     private GameMenu mb;
     private java.awt.Menu optionsMenu;
+    private Menu lastActionLabel;
     private java.awt.MenuItem reset;
 
     private EventHandler handler;
@@ -32,10 +33,11 @@ public class Grid extends JFrame {
 
     public Grid(){
     }
-    private void checkWin(int gridSpot){
+    private void checkWin(){
         boolean[] buttons = new boolean[9];
         int i=0;
         int draw=0;
+        boolean win = false;
         for(JButton button: gridButtons){
             if(button.getText().equals(player.getMarker())){
                 buttons[i] = true;
@@ -43,34 +45,39 @@ public class Grid extends JFrame {
             }
             i++;
         }
+
         for(int j = 0; j<3; j++) {
             if (buttons[j] && buttons[j+3] && buttons[j+6]){
                 JOptionPane.showMessageDialog(this,player.getName() + " Wins");
-                gridState(false);
+                win = true;
+                setGridState(false);
             }
         }
         for(int k = 0; k<7; k+=3){
             if (buttons[k] && buttons[k+1] && buttons[k+2]){
                 JOptionPane.showMessageDialog(this, player.getName() + " Wins");
-                gridState(false);
+                win = true;
+                setGridState(false);
             }
         }
         if(buttons[0] && buttons[4] && buttons[8]){
             JOptionPane.showMessageDialog(this,player.getName() + " Wins");
-            gridState(false);
+            win = true;
+            setGridState(false);
         }
         if(buttons[2] && buttons[4] && buttons[6]){
             JOptionPane.showMessageDialog(this,player.getName() + " Wins");
-            gridState(false);
+            win = true;
+            setGridState(false);
         }
-        if(draw==5){
+        if(draw==5 && win==false){
             JOptionPane.showMessageDialog(this,"The only way to win is not to play...");
-            gridState(false);
+            setGridState(false);
 
         }
 
     }
-    private void gridState(boolean state){
+    private void setGridState(boolean state){
         for (Component component : getContentPane().getComponents()) {
             if (component instanceof JButton) {
                 ((JButton) component).setEnabled(state);
@@ -101,6 +108,7 @@ public class Grid extends JFrame {
     }
     public void initFrame(){
         mb = new GameMenu(players);
+        lastActionLabel = new Menu("Last Move: ");
         optionsMenu = new Menu("Options");
         reset = new MenuItem("Reset...");
         reset.addActionListener(new ActionListener() {
@@ -111,6 +119,7 @@ public class Grid extends JFrame {
         });
         optionsMenu.add(reset);
         mb.add(optionsMenu);
+        mb.add(lastActionLabel);
         setMenuBar(mb);
         setTitle("Test");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -124,6 +133,11 @@ public class Grid extends JFrame {
     public void setPlayers(ArrayList<Player> players){
         this.players = players;
     }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     public void setActivePlayer(int player){
         this.player = players.get(player);
     }
@@ -133,7 +147,7 @@ public class Grid extends JFrame {
     private void setButtonValue(JButton button){
         if(!button.getText().equals("O") && !button.getText().equals("X")){
             player.placeMarker(button);
-            checkWin(gridButtons.indexOf(button));
+            checkWin();
             player.endTurn();
         }
     }
@@ -141,7 +155,7 @@ public class Grid extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() instanceof JButton){
-                setTitle(player.getName() +" clicked " + ((JButton) e.getSource()).getName());
+                lastActionLabel.setLabel("Last Move: " + player.getName() +" clicked " + ((JButton) e.getSource()).getName());
                 setButtonValue((JButton) e.getSource());
 
             }

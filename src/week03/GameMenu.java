@@ -1,5 +1,6 @@
 package week03;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,15 +18,21 @@ public class GameMenu extends java.awt.MenuBar {
     MenuItem changeName;
     Menu playerMenu;
     ArrayList<Menu> playerMenus;
-    GameMenu(ArrayList<Player> players){
+    GameMenu(final ArrayList<Player> players){
         playerMenus = new ArrayList<Menu>();
-        for(Player player: players){
+        for(final Player player: players){
             playerMenu = new Menu(player.getName() + " (" + player.getMarker() + ")");
             changeName = new MenuItem("Change Name");
             changeName.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    String newName;
+                    newName = JOptionPane.showInputDialog("Please type the new name: ");
+                    MenuItem change = (MenuItem) e.getSource();
+                    Menu parentMenu = (Menu) change.getParent();
+                    parentMenu.setLabel(newName + " (" +player.getMarker() + ")");
+                    player.setName(newName);
+                    players.set(players.indexOf(player), player);
                 }
             });
             playerMenu.add(changeName);
