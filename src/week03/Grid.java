@@ -25,7 +25,6 @@ public class Grid extends JFrame {
     private java.awt.MenuItem reset;
 
     private EventHandler handler;
-    private final GridLayout layout = new GridLayout(3,3);
     private Container container;
     private ArrayList<JButton> gridButtons;
     private ArrayList<Player> players;
