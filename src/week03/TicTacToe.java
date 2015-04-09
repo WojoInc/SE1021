@@ -27,7 +27,6 @@ public class TicTacToe {
         eventHandler = new TicTacTurnListener(grid);
         players.get(0).addTurnListener(eventHandler);
         players.get(1).addTurnListener(eventHandler);
-
     }
     public static void initGrid(){
         grid.setPlayers(players);

@@ -14,25 +14,45 @@ import java.util.ArrayList;
  * @author wesolowskitj
  * @version 1.0 Created on 4/2/2015 at 12:26 AM
  */
-public class Othello implements TurnListener{
+public class Othello implements TurnListener, FlipListener{
     private static GameBoard board;
     private static ArrayList<Player> players;
     private static JButton[][] buttons;
+
+    @Override
+    public void terminates(FlipEvent e) {
+        int i= e.getStartX();
+        int j= e.getStartY();
+        do{
+            buttons[i][j].setBackground(((OthelloMarker)e.getPlayer().getMarker()).getColor());
+            buttons[i][j].setName(e.getPlayer().getName());
+            i+=e.getxIncr();
+            j+=e.getyIncr();
+        }while(i!=e.getxValue()&&j!=e.getyValue());
+    }
+
     public enum AdjacentMarkers {
-        topleft(-9),
-        //top(-8),
-        topRight(-7),
-        //left(-1),
-        //right(1),
-        bottomLeft(7),
-       // bottom(8),
-        bottomRight(9);
-        private int increment;
-        public int getIncrement(){
-            return increment;
+        topleft(-1,-1),
+        top(0,-1),
+        topRight(1,-1),
+        left(-1,0),
+        right(1,0),
+        bottomLeft(-1,1),
+        bottom(0,1),
+        bottomRight(1,1);
+        private int x;
+        private int y;
+        public int getX(){
+            return x;
         }
-        AdjacentMarkers(int increment) {
-            this.increment = increment;
+
+        public int getY() {
+            return y;
+        }
+
+        AdjacentMarkers(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
     public void initGame(){
@@ -47,56 +67,46 @@ public class Othello implements TurnListener{
         OthelloGUI gui = new OthelloGUI(players);
         board = new GameBoard(new GridLayout(8, 8), players);
         gui.setContentPane(board);
+        parseButtonsToArray();
         board.setActivePlayer(players.get(0));
     }
-    public void flipMarkers(Player player){
+    private void parseButtonsToArray(){
         ArrayList<JButton> markers = board.getBoardButtons();
+        int i,j,k=0;
+        for(i=0;i<8;i++){
+            for(j=0; j<8;j++){
+                buttons[i][j] = markers.get(k);
+                k++;
+            }
+        }
+    }
+    public void flipMarkers(Player player){
+        JButton lastMarked = (JButton)player.getLastMarkerReference();
         ArrayList<JButton> toFlip = new ArrayList<JButton>();
-        JButton lastmarked = (JButton) board.getActivePlayer().getLastMarkerReference();
-        JButton currentButton;
-        JButton endButton = new JButton();
-        int location =0;
-        boolean terminate = false;
-        int increment= 0;
-        int currentLocation=0;
-        int a=0;
-        for(JButton button: markers){
-            if(button.equals(lastmarked)){
-              location =a;
+        boolean terminates =false;
+        int startX=0,startY=0;
+        int endX=0,endY=0;
+        for(int i=0;i<8;i++){
+            for(int j=0; j<8;j++){
+                if(buttons[i][j].equals(lastMarked)){
+                    startX = i;
+                    startY = j;
+                }
             }
-            a++;
         }
-        markers.get(location).setBackground(((OthelloMarker) player.getMarker()).getColor());
-        markers.get(location).setName(player.getName());
         for(AdjacentMarkers marker: AdjacentMarkers.values()){
-            increment = marker.getIncrement();
-            switch (increment) {
-                default:
-                    currentLocation = location+ increment;
-                    currentButton = markers.get(currentLocation);
-                    for(currentLocation=currentLocation;currentLocation<64 &&currentLocation>-1; currentLocation+=increment) {
-                        currentButton = markers.get(currentLocation);
-                        if (!markers.get(currentLocation).getName().equals(player.getName()) && !markers.get(currentLocation).getText().equals("")) {
-                            toFlip.add(currentButton);
-                        }
-                        if (currentButton.getName().equals(player.getName()) && terminate == false) {
-                            terminate = true;
-                            endButton = currentButton;
-                        }
+            int i=startX+ marker.getX(),j=startY + marker.getY();
+            while(i>-1 && i<8 && j>-1 && j<8) {
+                    if (!buttons[i][j].getName().equals(player.getName()) && !buttons[i][j].getName().equals("")) {
+                        toFlip.add(buttons[i][j]);
                     }
-                    if(terminate){
-                        int i =0;
-                        do{
-                            currentButton = toFlip.get(i);
-                            currentButton.setBackground(OthelloMarker.BLACK.getColor());
-                            currentButton.setName(player.getName());
-                            i++;
-                        }while(!currentButton.getName().equals(player.getName()));
+                    else if(buttons[i][j].getName().equals(player.getName())){
+                        terminates(new FlipEvent(startX, startY, i,j, marker.getX(),marker.getY(), player));
                     }
+                i+=marker.getX();
+                j+=marker.getY();
             }
         }
-
-
     }
 
     public Othello(){
