@@ -45,8 +45,8 @@ public abstract class OthelloChips implements Player {
 
     @Override
     public void placeMarker(Object objectRef) {
-        ((JButton) objectRef).setBackground(marker.getColor());
-        ((JButton) objectRef).setName(getName());
+        //((JButton) objectRef).setBackground(marker.getColor());
+        //((JButton) objectRef).setName(getName());
         this.markerRef = objectRef;
         listener.turnEnd(event);
     }

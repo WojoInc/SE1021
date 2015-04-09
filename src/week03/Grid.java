@@ -77,6 +77,13 @@ public class Grid extends JFrame {
 
     }
     private void setGridState(boolean state){
+        if(!state){
+            for(Menu parent: mb.playerMenus){
+                if(!parent.getItem(1).isEnabled()){
+                    parent.getItem(1).setEnabled(true);
+                }
+            }
+        }
         for (Component component : getContentPane().getComponents()) {
             if (component instanceof JButton) {
                 ((JButton) component).setEnabled(state);
@@ -84,6 +91,11 @@ public class Grid extends JFrame {
         }
     }
     private void resetGrid(){
+        for(Menu parent: mb.playerMenus){
+            if(!parent.getItem(1).isEnabled()){
+                parent.getItem(1).setEnabled(true);
+            }
+        }
         for(Component component: getContentPane().getComponents()){
             if(component instanceof JButton)
                 ((JButton) component).setText("");
@@ -154,6 +166,11 @@ public class Grid extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() instanceof JButton){
+                for(Menu parent: mb.playerMenus){
+                    if(parent.getItem(1).isEnabled()){
+                    parent.getItem(1).setEnabled(false);
+                    }
+                }
                 lastActionLabel.setLabel("Last Move: " + player.getName() +" clicked " + ((JButton) e.getSource()).getName());
                 setButtonValue((JButton) e.getSource());
 

@@ -1,14 +1,6 @@
 package week03;
 
-import com.sun.xml.internal.ws.api.Component;
-
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.EventObject;
 
 /**
  * Purpose:
@@ -21,14 +13,18 @@ import java.util.EventObject;
 public class Player{
     protected String name;
     protected String marker;
-    protected TurnListener turnListener;
+    protected TicTacTurnListener turnListener;
     protected TurnEvent event;
-    public void addTurnListener(TurnListener listener){
+    public void addTurnListener(TicTacTurnListener listener){
         this.turnListener = listener;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMarker(String marker) {
+        this.marker = marker;
     }
 
     public String getName(){

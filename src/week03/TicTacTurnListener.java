@@ -11,11 +11,11 @@ import java.util.EventListener;
  * <p/>
  * Created by wesolowskitj on 4/1/2015 at 2:18 PM.
  */
-public class TurnListener implements EventListener {
+public class TicTacTurnListener implements EventListener {
     private Player source;
     private Grid grid;
     private void nextPlayer(){
-        if(source.getMarker().equals("X")){
+        if(source instanceof X){
             grid.setActivePlayer(1);
         }
         else {
@@ -26,7 +26,7 @@ public class TurnListener implements EventListener {
         source = (Player) e.getSource();
         nextPlayer();
     }
-    TurnListener(Grid grid){
+    TicTacTurnListener(Grid grid){
         this.grid = grid;
     }
 

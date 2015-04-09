@@ -17,8 +17,26 @@ import java.util.ArrayList;
 public class Othello implements TurnListener{
     private static GameBoard board;
     private static ArrayList<Player> players;
-
+    private static JButton[][] buttons;
+    public enum AdjacentMarkers {
+        topleft(-9),
+        //top(-8),
+        topRight(-7),
+        //left(-1),
+        //right(1),
+        bottomLeft(7),
+       // bottom(8),
+        bottomRight(9);
+        private int increment;
+        public int getIncrement(){
+            return increment;
+        }
+        AdjacentMarkers(int increment) {
+            this.increment = increment;
+        }
+    }
     public void initGame(){
+        buttons = new JButton[8][8];
         BlackChip blackChip = new BlackChip("TJ");
         blackChip.addTurnListener(this);
         WhiteChip whiteChip = new WhiteChip("Anna");
@@ -33,83 +51,54 @@ public class Othello implements TurnListener{
     }
     public void flipMarkers(Player player){
         ArrayList<JButton> markers = board.getBoardButtons();
+        ArrayList<JButton> toFlip = new ArrayList<JButton>();
         JButton lastmarked = (JButton) board.getActivePlayer().getLastMarkerReference();
-        JButton adjacent;
-        adjacent = markers.get(markers.indexOf(lastmarked) - 8);
-        if( adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            if(markers.get(markers.indexOf(adjacent)-8).getName().equals(lastmarked.getName())) {
-                do {
-                    adjacent.setName(board.getActivePlayer().getName());
-                    adjacent.setBackground(lastmarked.getBackground());
-                    adjacent = markers.get(markers.indexOf(adjacent) - 8);
-                } while (adjacent.getBackground() != lastmarked.getBackground());
+        JButton currentButton;
+        JButton endButton = new JButton();
+        int location =0;
+        boolean terminate = false;
+        int increment= 0;
+        int currentLocation=0;
+        int a=0;
+        for(JButton button: markers){
+            if(button.equals(lastmarked)){
+              location =a;
             }
-            System.out.println("Logic works");
+            a++;
         }
-        adjacent = markers.get(markers.indexOf(lastmarked) + 8);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            do{
-                adjacent.setName(board.getActivePlayer().getName());
-                adjacent.setBackground(lastmarked.getBackground());
-                adjacent =  markers.get(markers.indexOf(adjacent)+8);
-            }while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
+        markers.get(location).setBackground(((OthelloMarker) player.getMarker()).getColor());
+        markers.get(location).setName(player.getName());
+        for(AdjacentMarkers marker: AdjacentMarkers.values()){
+            increment = marker.getIncrement();
+            switch (increment) {
+                default:
+                    currentLocation = location+ increment;
+                    currentButton = markers.get(currentLocation);
+                    for(currentLocation=currentLocation;currentLocation<64 &&currentLocation>-1; currentLocation+=increment) {
+                        currentButton = markers.get(currentLocation);
+                        if (!markers.get(currentLocation).getName().equals(player.getName()) && !markers.get(currentLocation).getText().equals("")) {
+                            toFlip.add(currentButton);
+                        }
+                        if (currentButton.getName().equals(player.getName()) && terminate == false) {
+                            terminate = true;
+                            endButton = currentButton;
+                        }
+                    }
+                    if(terminate){
+                        int i =0;
+                        do{
+                            currentButton = toFlip.get(i);
+                            currentButton.setBackground(OthelloMarker.BLACK.getColor());
+                            currentButton.setName(player.getName());
+                            i++;
+                        }while(!currentButton.getName().equals(player.getName()));
+                    }
+            }
         }
-        adjacent = markers.get(markers.indexOf(lastmarked) - 1);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            do{
-                adjacent.setName(board.getActivePlayer().getName());
-                adjacent.setBackground(lastmarked.getBackground());
-                adjacent =  markers.get(markers.indexOf(adjacent)-1);
-            }while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
-        }
-        adjacent = markers.get(markers.indexOf(lastmarked) + 1);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            do{
-                adjacent.setName(board.getActivePlayer().getName());
-                adjacent.setBackground(lastmarked.getBackground());
-                adjacent =  markers.get(markers.indexOf(adjacent)+1);
-            }while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
-        }
-        adjacent = markers.get(markers.indexOf(lastmarked) - 9);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-                do {
-                    adjacent.setName(board.getActivePlayer().getName());
-                    adjacent.setBackground(lastmarked.getBackground());
-                    adjacent = markers.get(markers.indexOf(adjacent) - 9);
-                } while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
-        }
-        adjacent = markers.get(markers.indexOf(lastmarked) - 7);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            do{
-                adjacent.setName(board.getActivePlayer().getName());
-                adjacent.setBackground(lastmarked.getBackground());
-                adjacent =  markers.get(markers.indexOf(adjacent)-7);
-            }while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
-        }
-        adjacent = markers.get(markers.indexOf(lastmarked) + 7);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            do{
-                adjacent.setName(board.getActivePlayer().getName());
-                adjacent.setBackground(lastmarked.getBackground());
-                adjacent =  markers.get(markers.indexOf(adjacent)+7);
-            }while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
-        }
-        adjacent = markers.get(markers.indexOf(lastmarked) + 9);
-        if(adjacent.getName() != lastmarked.getName() && !adjacent.getName().isEmpty()){
-            do{
-                adjacent.setName(board.getActivePlayer().getName());
-                adjacent.setBackground(lastmarked.getBackground());
-                adjacent =  markers.get(markers.indexOf(adjacent)+9);
-            }while (adjacent.getBackground() != lastmarked.getBackground());
-            System.out.println("Logic works");
-        }
+
+
     }
+
     public Othello(){
         initGame();
     }

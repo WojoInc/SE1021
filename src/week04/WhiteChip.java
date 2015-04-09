@@ -1,8 +1,5 @@
 package week04;
 
-import week03.*;
-import week03.TurnListener;
-
 /**
  * Labs 1011-011
  * Purpose:

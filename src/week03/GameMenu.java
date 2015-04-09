@@ -17,13 +17,14 @@ import java.util.ArrayList;
  */
 public class GameMenu extends java.awt.MenuBar {
     MenuItem changeName;
+    MenuItem changeMarker;
     Menu playerMenu;
     ArrayList<Menu> playerMenus;
     GameMenu(final ArrayList<Player> players){
         playerMenus = new ArrayList<Menu>();
         for(final Player player: players){
             playerMenu = new Menu(player.getName() + " (" + player.getMarker() + ")");
-            changeName = new MenuItem("Change Name");
+            changeName = new MenuItem("Change Name...");
             changeName.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e){
@@ -42,9 +43,36 @@ public class GameMenu extends java.awt.MenuBar {
                     catch(EmptyStringException ex){
                         JOptionPane.showMessageDialog(null,ex.getMessage());
                     }
+                    catch (NullPointerException ex){
+                        System.out.println("User cancelled changes.");
+                    }
+                }
+            });
+            changeMarker = new MenuItem("Change Marker...");
+            changeMarker.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String newMarker;
+                    try {
+                        newMarker = JOptionPane.showInputDialog("Please type one character to use as a marker: ");
+                        if (newMarker.length() != 1) {
+                            throw new EmptyStringException("Please enter one valid character for the marker: ");
+                        }
+                        MenuItem change = (MenuItem) e.getSource();
+                        Menu parentMenu = (Menu) change.getParent();
+                        player.setMarker(newMarker);
+                        players.set(players.indexOf(player), player);
+                        parentMenu.setLabel(player.getName() + " (" + player.getMarker() + ")");
+                    } catch (EmptyStringException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                    catch (NullPointerException ex){
+                        System.out.println("User cancelled changes.");
+                    }
                 }
             });
             playerMenu.add(changeName);
+            playerMenu.add(changeMarker);
             playerMenus.add(playerMenu);
         }
         for(Menu menu: playerMenus){
