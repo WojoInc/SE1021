@@ -1,7 +1,4 @@
-package week03;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
+package TicTacToeExpanded;
 
 /**
  * Purpose:
@@ -11,12 +8,15 @@ import java.awt.event.ActionEvent;
  * <p/>
  * Created by wesolowskitj on 3/26/2015 at 2:13 PM.
  */
-public class X extends Player{
+public class X extends Player {
 
-    /**
-     * constructor for X
-     * @param name initial player name
-     */
+   /* @Override
+    public ActionEvent endTurnNotify() {
+        return null;
+    }
+    */
+
+
     public X(String name){
         this.name = name;
         this.marker = "X";

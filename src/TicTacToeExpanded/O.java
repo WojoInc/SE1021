@@ -1,8 +1,4 @@
-package week03;
-
-import com.sun.istack.internal.NotNull;
-
-import javax.swing.*;
+package TicTacToeExpanded;
 
 /**
  * Purpose:
