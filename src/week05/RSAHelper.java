@@ -10,23 +10,45 @@ package week05;
  */
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 
 public class RSAHelper {
-    public int seed1;
-    public int seed2;
+    private int seed1;
+    private int seed2;
+    private int p;
+    private int q;
+    private long n;
+    private long totient;
 
     public RSAHelper(int seed1, int seed2) {
         this.seed1 = seed1;
         this.seed2 = seed2;
+
     }
 
+    public int getP() {
+        return p;
+    }
+    public int getQ() {
+        return q;
+    }
+    public long getN(){
+        return n;
+    }
+    public long getTotient(){
+        return totient;
+    }
     public int getSeed1() {
         return seed1;
     }
-
     public int getSeed2() {
         return seed2;
+    }
+
+    public void calcInitialValues(){
+        int[] temp = sieve(seed1);
+        p = temp[temp.length-1];
     }
 
     /**
@@ -50,7 +72,9 @@ public class RSAHelper {
         }
         return numberPrimes;
     }
-
+    public ArrayList<Integer> condense(){
+        for
+    }
     /**
      * Sifts through an array from 0 to seed and marks all numbers in array that are not prime. Then outputs
      * the number of primes remaining in the array
