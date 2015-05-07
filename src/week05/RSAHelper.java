@@ -11,6 +11,7 @@ package week05;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class RSAHelper {
@@ -19,6 +20,8 @@ public class RSAHelper {
     protected long p;
     protected long q;
     protected long n;
+    protected long e;
+    protected long d;
     protected long totient;
     private ArrayList<Integer> primeList;
 
@@ -41,6 +44,15 @@ public class RSAHelper {
     public long getN(){
         return n;
     }
+
+    public long getE() {
+        return e;
+    }
+
+    public long getD() {
+        return d;
+    }
+
     public long getTotient(){
         return totient;
     }
@@ -50,6 +62,12 @@ public class RSAHelper {
     public int getSeed2() {
         return seed2;
     }
+    public Key getEncryptionKey(){
+        return new Key(n,e);
+    }
+    public Key getDecryptionKey(){
+        return new Key(n,d);
+    }
 
     public void calcInitialValues(){
         condense(sieve(seed1));
@@ -58,28 +76,62 @@ public class RSAHelper {
         q = primeList.get(primeList.size()-1);
         n = p*q;
         totient = (p-1) * (q-1);
+        generateE();
+        generateD();
     }
+    public void generateE(){
+        /*Random generator = new Random();
+        boolean done =false;
+        while(!done){
+            e = primeList.get(generator.nextInt())
+        }*/
+        e = 65537;
 
-    /**
-     * This method iterates through the array passed into it, and counts every number that is non-zero. It then returns
-     * that number in the form of an integer.
-     * @param sifted the "pan" or array that has been sifted through by the sieve() method.
-     * @param seed input from the user in the form of an integer, representing the number to count up to
-     * @param verbose true: print a list of all primes in console false: save time by skipping verbose output.
-     * @return integer representing the number of primes in the inputted array
-     */
-    public int countPrimes(int[] sifted, int seed, boolean verbose){
-        //count all primes in array
-        int numberPrimes =0;
-        for(int k = 0; k <= seed; k++){
-            if(sifted[k] != 0){
-                if (verbose){
-                    System.out.println(sifted[k]);
-                }
-                numberPrimes++;
-            }
+        if(gcd(totient,e)!= 1){
+            System.out.println("Whoops.");
         }
-        return numberPrimes;
+    }
+    public void generateD(){
+        long a = e;
+        long b = totient;
+        long x = 0, y = 1, lastx = 1, lasty = 0;
+        while(b!=0)
+        {
+            long quotient = a/b;
+
+            long temp = a;
+            a = b;
+            b=temp%b;
+
+            temp = x;
+            x=lastx-quotient*x;
+            lastx=temp;
+
+            temp = y;
+            y=lasty-quotient*y;
+            lasty=temp;
+        }
+
+        if(e*lastx%totient == 1)
+        {
+            d=lastx;
+        }
+        else
+        {
+            d=lasty;
+        }
+    }
+    private long gcd(long x, long y) {
+        if (y == 0) {
+            return x;
+        } else if (x == 0) {
+            return y;
+        } else if (x >= y) {
+            return gcd(y, (x % y));
+        } else if (y > x) { //y >=x would be fine too, although the = is already captured earlier
+            return gcd(x, (y % x));
+        }
+        return 0; //doesn't really matter, this is not for math but java
     }
     public ArrayList<Integer> condense(int [] primes){
         primeList = new ArrayList<Integer>();

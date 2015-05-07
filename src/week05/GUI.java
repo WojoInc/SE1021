@@ -33,8 +33,10 @@ public class GUI extends JFrame implements ActionListener{
         fileMenuItems = new ArrayList<MenuItem>();
         helpMenuItems = new ArrayList<MenuItem>();
         MenuItem inFileItem = new MenuItem("Open Input File...");
+        inFileItem.setName("inFile");
         inFileItem.addActionListener(this);
         MenuItem outFileItem = new MenuItem("Open Output File...");
+        outFileItem.setName("outFile");
         outFileItem.addActionListener(this);
         fileMenuItems.add(inFileItem);
         fileMenuItems.add(outFileItem);
@@ -66,7 +68,11 @@ public class GUI extends JFrame implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getSource() instanceof JMenuItem){
+            if(((JMenuItem) e.getSource()).getName().equals("inFile")){
+                openSaveDialog.setVisible(true);
+            }
+        }
     }
 
     public static void main(String[] args) {

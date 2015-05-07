@@ -6,23 +6,26 @@ import java.util.logging.FileHandler;
 /**
  * Created by Owner on 5/6/2015.
  */
-public class Encrypt extends RSAHelper{
+public class Encrypt {
     private File inFile;
     private File outFile;
+    private Key encryptKey;
+    private RSAHelper rsaHelper;
 
     Encrypt(int seed1, int seed2, File inFile, File outFile){
-        super(seed1,seed2);
+        rsaHelper = new RSAHelper(seed1,seed2);
+        rsaHelper.calcInitialValues();
+        encryptKey = rsaHelper.getEncryptionKey();
         this.inFile = inFile;
         this.outFile = outFile;
-        calcInitialValues();
+
     }
 
     public static void main(String[] args) {
-        Encrypt test = new Encrypt(4545332,84564614,null,null);
-        System.out.println(test.p);
-        System.out.println(test.q);
-        System.out.println(test.n);
-        System.out.println(test.totient);
+        Encrypt test = new Encrypt(9854592,9456614,null,null);
+        System.out.println(test.rsaHelper.getN());
+        System.out.println(test.encryptKey.toString());
+
     }
 
 
