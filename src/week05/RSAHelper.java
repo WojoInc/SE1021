@@ -16,21 +16,26 @@ import java.util.ArrayList;
 public class RSAHelper {
     private int seed1;
     private int seed2;
-    private int p;
-    private int q;
-    private long n;
-    private long totient;
+    protected long p;
+    protected long q;
+    protected long n;
+    protected long totient;
+    private ArrayList<Integer> primeList;
 
     public RSAHelper(int seed1, int seed2) {
         this.seed1 = seed1;
         this.seed2 = seed2;
+        p=0;
+        q=0;
+        n=0;
+        totient=0;
 
     }
 
-    public int getP() {
+    public long getP() {
         return p;
     }
-    public int getQ() {
+    public long getQ() {
         return q;
     }
     public long getN(){
@@ -47,8 +52,12 @@ public class RSAHelper {
     }
 
     public void calcInitialValues(){
-        int[] temp = sieve(seed1);
-        p = temp[temp.length-1];
+        condense(sieve(seed1));
+        p = primeList.get(primeList.size()-1);
+        condense(sieve(seed2));
+        q = primeList.get(primeList.size()-1);
+        n = p*q;
+        totient = (p-1) * (q-1);
     }
 
     /**
@@ -72,8 +81,12 @@ public class RSAHelper {
         }
         return numberPrimes;
     }
-    public ArrayList<Integer> condense(){
-        for
+    public ArrayList<Integer> condense(int [] primes){
+        primeList = new ArrayList<Integer>();
+        for(Integer i: primes){
+            if(i != 0) primeList.add(i);
+        }
+        return primeList;
     }
     /**
      * Sifts through an array from 0 to seed and marks all numbers in array that are not prime. Then outputs
@@ -85,7 +98,7 @@ public class RSAHelper {
 
         //create an array that holds all numbers between 0 and user number
 
-        int [] primes = new int[seed +1 ];
+        int[] primes = new int[seed +1 ];
         for(int i = 0; i <= seed ; i++){
             primes[i] = i;
         }
@@ -111,7 +124,6 @@ public class RSAHelper {
             }
 
         }
-
         return primes;
     }
 }

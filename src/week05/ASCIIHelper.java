@@ -18,5 +18,8 @@ public class ASCIIHelper {
         chooser.showOpenDialog(null);
         ASCIIHelper helper = new ASCIIHelper(chooser.getSelectedFile());
         System.out.println(helper.file.getAbsolutePath());
+        char i = 't';
+
+
     }
 }
