@@ -68,6 +68,14 @@ public class RSAHelper {
     public Key getDecryptionKey(){
         return new Key(n,d);
     }
+    public long encryptValue(long input){
+        long eprime =1;
+        long lastvalue =1;
+        for (eprime=1; eprime<=13; eprime++){
+            lastvalue = ((lastvalue * input) % n);
+        }
+        return lastvalue;
+    }
 
     public void calcInitialValues(){
         condense(sieve(seed1));

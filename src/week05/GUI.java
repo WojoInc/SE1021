@@ -1,5 +1,8 @@
 package week05;
 
+import javafx.stage.FileChooser;
+import week01.Banner;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,15 +16,15 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements ActionListener{
     private File inputFile;
     private File outputFile;
-    private FileDialog openSaveDialog;
+    private JFileChooser openSaveDialog;
     private FlowLayout layout;
-    private RSAHelper rsaHelper;
+    private Encrypt encrypt;
     private final MenuBar menuBar = new MenuBar();
     private final Menu fileMenu = new Menu("File");
     private final Menu helpMenu = new Menu("Help");
     private ArrayList<MenuItem> fileMenuItems;
     private ArrayList<MenuItem> helpMenuItems;
-    private static Dimension WINDOW_SIZE = new Dimension(800,600);
+    private static Dimension WINDOW_SIZE = new Dimension(400,400);
 
     private void setFrameDefaults(){
         setSize(WINDOW_SIZE);
@@ -68,14 +71,40 @@ public class GUI extends JFrame implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() instanceof JMenuItem){
-            if(((JMenuItem) e.getSource()).getName().equals("inFile")){
-                openSaveDialog.setVisible(true);
+        if(e.getSource() instanceof MenuItem){
+            if(((MenuItem) e.getSource()).getName().equals("inFile")){
+                openSaveDialog = new JFileChooser();
+                openSaveDialog.showOpenDialog(null);
+                inputFile = openSaveDialog.getSelectedFile();
+            }
+            if(((MenuItem) e.getSource()).getName().equals("outFile")){
+                openSaveDialog.showOpenDialog(null);
+                outputFile = openSaveDialog.getSelectedFile();
+            }
+        }
+
+        if(e.getSource() instanceof JButton){
+            if(((JButton) e.getSource()).getName().equals("encryptBtn")){
+                encrypt = new Encrypt(33498,36873,inputFile,outputFile);
+                try {
+                    encrypt.readFile();
+                    encrypt.encryptFile();
+                    encrypt.writeFile();
+                }
+                catch(Exception ex){
+
+                }
+            }
+            if(((JButton) e.getSource()).getName().equals("decryptBtn")){
+
             }
         }
     }
 
     public static void main(String[] args) {
+        Banner welcome = new Banner("GUI","This program when finished will encrypt a text file and output the result to a new "
+                +"file","wesolowskitj");
+        JOptionPane.showMessageDialog(null,welcome);
         GUI gui = new GUI();
     }
 }
