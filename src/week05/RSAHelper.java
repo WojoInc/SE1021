@@ -11,6 +11,7 @@ package week05;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.LongSummaryStatistics;
 import java.util.Random;
 
 
@@ -68,15 +69,23 @@ public class RSAHelper {
     public Key getDecryptionKey(){
         return new Key(n,d);
     }
-    public long encryptValue(long input){
+    public long encryptValue(int inputInt){
         long eprime =1;
         long lastvalue =1;
-        for (eprime=1; eprime<=13; eprime++){
+        long input = Integer.toUnsignedLong(inputInt);
+        for (eprime=1; eprime<=e; eprime++){
             lastvalue = ((lastvalue * input) % n);
         }
         return lastvalue;
     }
-
+    public long decryptValue(long input){
+        long dprime =1;
+        long lastvalue =1;
+        for (dprime=1; dprime<=d; dprime++){
+            lastvalue = ((lastvalue * input) % n);
+        }
+        return lastvalue;
+    }
     public void calcInitialValues(){
         condense(sieve(seed1));
         p = primeList.get(primeList.size()-1);
@@ -93,7 +102,7 @@ public class RSAHelper {
         while(!done){
             e = primeList.get(generator.nextInt())
         }*/
-        e = 65537;
+        e = 67;
 
         if(gcd(totient,e)!= 1){
             System.out.println("Whoops.");

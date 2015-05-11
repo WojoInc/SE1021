@@ -87,7 +87,8 @@ public class GUI extends JFrame implements ActionListener{
             if(((JButton) e.getSource()).getName().equals("encryptBtn")){
                 encrypt = new Encrypt(33498,36873,inputFile,outputFile);
                 try {
-                    encrypt.readFile();
+                    encrypt.openFile();
+                    encrypt.parseFile();
                     encrypt.encryptFile();
                     encrypt.writeFile();
                 }
