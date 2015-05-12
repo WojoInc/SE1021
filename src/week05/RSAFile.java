@@ -47,10 +47,11 @@ public class RSAFile {
     public void parseFileForDecrypt(){
         String input="";
         scanner = new Scanner(inputStream);
+        asciiStringArray = new ArrayList<String>();
         while(scanner.hasNext()) {
-            input = scanner.next();
+            input = scanner.nextLine();
             System.out.println(input);
-            asciiIntArray.add(Integer.parseInt(input));
+            asciiStringArray.add(input);
         }
     }
 
@@ -88,9 +89,12 @@ public class RSAFile {
     }
 
     public void decryptFile(){
+        asciiIntArray = new ArrayList<Integer>();
+        for(String s: asciiStringArray){
+            asciiIntArray.add((rsaHelper.decryptValue(new BigInteger(s),key)).intValue());
+        }
+        asciiStringArray = new ArrayList<String>();
         for(Integer i: asciiIntArray){
-            i = (rsaHelper.decryptValue(BigInteger.valueOf(i),key)).intValue();
-            System.out.println(i);
             asciiStringArray.add(new String(byteArrayToCharArray(unwrapIntToByteArray(i))));
         }
         System.out.println(asciiStringArray);
