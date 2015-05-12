@@ -10,6 +10,7 @@ package week05;
  */
 
 import javax.swing.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LongSummaryStatistics;
 import java.util.Random;
@@ -64,10 +65,10 @@ public class RSAHelper {
         return seed2;
     }
     public Key getEncryptionKey(){
-        return new Key(n,e);
+        return new Key(BigInteger.valueOf(n),BigInteger.valueOf(e));
     }
     public Key getDecryptionKey(){
-        return new Key(n,d);
+        return new Key(BigInteger.valueOf(n),BigInteger.valueOf(d));
     }
     public long encryptValue(int inputInt){
         long eprime =1;
@@ -194,5 +195,22 @@ public class RSAHelper {
 
         }
         return primes;
+    }
+    public BigInteger modExpo(BigInteger M, Key encKey){
+        BigInteger base = M;
+        BigInteger exponent = encKey.getE();
+        BigInteger N = encKey.getN();
+        BigInteger result = BigInteger.ONE;
+        BigInteger currentBit;
+
+        while(exponent.compareTo(BigInteger.ZERO) == 1){
+            currentBit = exponent.mod(BigInteger.valueOf(2));
+            if(currentBit.equals(BigInteger.ONE)){
+                result = ((result.multiply(base).mod(N)));
+            }
+            exponent = exponent.divide(BigInteger.valueOf(2));
+            base = (base.multiply(base)).mod(N);
+        }
+        return result;
     }
 }

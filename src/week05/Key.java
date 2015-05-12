@@ -1,21 +1,25 @@
 package week05;
 
+import javafx.scene.layout.BackgroundImage;
+
+import java.math.BigInteger;
+
 /**
  * Created by Owner on 5/7/2015.
  */
 public class Key {
-    private long n;
-    private long e;
+    private BigInteger n;
+    private BigInteger e;
 
-    public long getN() {
+    public BigInteger getN() {
         return n;
     }
 
-    public long getE() {
+    public BigInteger getE() {
         return e;
     }
 
-    Key(long n, long e){
+    Key(BigInteger n, BigInteger e){
         this.n = n;
         this.e = e;
     }
