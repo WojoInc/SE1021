@@ -19,144 +19,64 @@ import java.util.Random;
 public class RSAHelper {
     private int seed1;
     private int seed2;
-    protected long p;
-    protected long q;
-    protected long n;
-    protected long e;
-    protected long d;
-    protected long totient;
+    protected BigInteger p;
+    protected BigInteger q;
+    protected BigInteger n;
+    protected BigInteger e;
+    protected BigInteger d;
+    protected BigInteger totient;
     private ArrayList<Integer> primeList;
 
     public RSAHelper(int seed1, int seed2) {
         this.seed1 = seed1;
         this.seed2 = seed2;
-        p=0;
-        q=0;
-        n=0;
-        totient=0;
-
+    }
+    public RSAHelper(){
+        this(0,0);
     }
 
-    public long getP() {
-        return p;
-    }
-    public long getQ() {
-        return q;
-    }
-    public long getN(){
-        return n;
-    }
-
-    public long getE() {
-        return e;
-    }
-
-    public long getD() {
-        return d;
-    }
-
-    public long getTotient(){
-        return totient;
-    }
-    public int getSeed1() {
-        return seed1;
-    }
-    public int getSeed2() {
-        return seed2;
-    }
-    public Key getEncryptionKey(){
-        return new Key(BigInteger.valueOf(n),BigInteger.valueOf(e));
-    }
-    public Key getDecryptionKey(){
-        return new Key(BigInteger.valueOf(n),BigInteger.valueOf(d));
-    }
-    public long encryptValue(int inputInt){
-        long eprime =1;
-        long lastvalue =1;
-        long input = Integer.toUnsignedLong(inputInt);
-        for (eprime=1; eprime<=e; eprime++){
-            lastvalue = ((lastvalue * input) % n);
-        }
-        return lastvalue;
-    }
-    public long decryptValue(long input){
-        long dprime =1;
-        long lastvalue =1;
-        for (dprime=1; dprime<=d; dprime++){
-            lastvalue = ((lastvalue * input) % n);
-        }
-        return lastvalue;
-    }
     public void calcInitialValues(){
-        condense(sieve(seed1));
-        p = primeList.get(primeList.size()-1);
-        condense(sieve(seed2));
-        q = primeList.get(primeList.size()-1);
-        n = p*q;
-        totient = (p-1) * (q-1);
-        generateE();
-        generateD();
+        primeList = condense(sieve(seed1));
+        p = BigInteger.valueOf(primeList.get(primeList.size() - 1));
+        primeList = condense(sieve(seed2));
+        q = BigInteger.valueOf(primeList.get(primeList.size() - 1));
+        n = p.multiply(q);
+        totient = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
+
     }
     public void generateE(){
-        /*Random generator = new Random();
-        boolean done =false;
-        while(!done){
-            e = primeList.get(generator.nextInt())
-        }*/
-        e = 67;
-
-        if(gcd(totient,e)!= 1){
-            System.out.println("Whoops.");
-        }
+        e = BigInteger.valueOf(65537);
     }
-    public void generateD(){
-        long a = e;
-        long b = totient;
-        long x = 0, y = 1, lastx = 1, lasty = 0;
-        while(b!=0)
-        {
-            long quotient = a/b;
-
-            long temp = a;
-            a = b;
-            b=temp%b;
-
-            temp = x;
-            x=lastx-quotient*x;
-            lastx=temp;
-
-            temp = y;
-            y=lasty-quotient*y;
-            lasty=temp;
-        }
-
-        if(e*lastx%totient == 1)
-        {
-            d=lastx;
-        }
-        else
-        {
-            d=lasty;
-        }
+    public void generateEncKey(){
+        generateE();
     }
-    private long gcd(long x, long y) {
-        if (y == 0) {
-            return x;
-        } else if (x == 0) {
-            return y;
-        } else if (x >= y) {
-            return gcd(y, (x % y));
-        } else if (y > x) { //y >=x would be fine too, although the = is already captured earlier
-            return gcd(x, (y % x));
+    public void generateDecKey(){
+        d = e.modInverse(totient);
+
+    }
+    public BigInteger getTotient(){
+        return totient;
+    }
+    public Key getEncryptionKey(){
+        return new Key(n,e);
+    }
+    public Key getDecryptionKey(){
+        return new Key(n,d);
+    }
+    public boolean isPrime(int value){
+        ArrayList<Integer> temp = condense(sieve(value+1));
+        boolean prime =false;
+        for(Integer i: temp){
+            if(i.equals(value))prime=true;
         }
-        return 0; //doesn't really matter, this is not for math but java
+        return prime;
     }
     public ArrayList<Integer> condense(int [] primes){
-        primeList = new ArrayList<Integer>();
+        ArrayList<Integer> primeArray = new ArrayList<Integer>();
         for(Integer i: primes){
-            if(i != 0) primeList.add(i);
+            if(i != 0) primeArray.add(i);
         }
-        return primeList;
+        return primeArray;
     }
     /**
      * Sifts through an array from 0 to seed and marks all numbers in array that are not prime. Then outputs
@@ -196,10 +116,23 @@ public class RSAHelper {
         }
         return primes;
     }
-    public BigInteger modExpo(BigInteger M, Key encKey){
-        BigInteger base = M;
-        BigInteger exponent = encKey.getE();
-        BigInteger N = encKey.getN();
+    private BigInteger gcd(BigInteger x, BigInteger y) {
+        if (y.equals(BigInteger.ZERO)) {
+            return x;
+        } else if (x.equals(BigInteger.ZERO)) {
+            return y;
+        } else if (x.compareTo(y)>0) {
+            return gcd(y, (x.mod(y)));
+        } else if (y.compareTo(x)>0) { //y >=x would be fine too, although the = is already captured earlier
+            return gcd(x, (y.mod(x)));
+        }
+        return BigInteger.ZERO; //doesn't really matter, this is not for math but java
+    }
+
+    public BigInteger modExpo(BigInteger value, Key key){
+        BigInteger base = value;
+        BigInteger exponent = key.getE();
+        BigInteger N = key.getN();
         BigInteger result = BigInteger.ONE;
         BigInteger currentBit;
 
@@ -213,4 +146,14 @@ public class RSAHelper {
         }
         return result;
     }
+    public BigInteger encryptValue(int inputInt,Key encKey){
+        return modExpo(BigInteger.valueOf(inputInt),encKey);
+    }
+
+    public BigInteger decryptValue(BigInteger input, Key decKey){
+        return modExpo(input, decKey);
+    }
+
+
+
 }

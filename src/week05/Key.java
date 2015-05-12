@@ -9,23 +9,23 @@ import java.math.BigInteger;
  */
 public class Key {
     private BigInteger n;
-    private BigInteger e;
+    private BigInteger exponent;
 
     public BigInteger getN() {
         return n;
     }
 
     public BigInteger getE() {
-        return e;
+        return exponent;
     }
 
-    Key(BigInteger n, BigInteger e){
+    Key(BigInteger n, BigInteger exponent){
         this.n = n;
-        this.e = e;
+        this.exponent = exponent;
     }
     public String toString(){
         String output ="";
-        output = "Keypair is: " + n + " " + e;
+        output = "Keypair is: " + n + " " + exponent;
         return output;
     }
 }
