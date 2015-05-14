@@ -6,17 +6,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
- * Created by Owner on 5/1/2015.
+ * Purpose: GUI that provides the user with options to choose files and textfields to enter values used to generate keys
+ * for use with the RSAHelper class for the purpose of encrypting and decrypting ASCII text files
+ * Created by wesolowskitj on 5/1/2015.
  */
 public class GUI extends JFrame implements ActionListener{
     private final Dimension WINDOW_SIZE = new Dimension(400,400);
     private File inputFile;
     private File outputFile;
-    private JFileChooser openSaveDialog;
+    private JFileChooser openSaveDialog = new JFileChooser();
     private SpringLayout layout;
     private RSAFile rsaFile;
     private RSAHelper rsaHelper;
@@ -33,6 +36,9 @@ public class GUI extends JFrame implements ActionListener{
     private ArrayList<JLabel> labels = new ArrayList<JLabel>();
     private NumberListener numberListener = new NumberListener();
 
+    /**
+     * configures defualt values such as size and location for the GUI
+     */
     private void setFrameDefaults(){
         setSize(WINDOW_SIZE);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -43,6 +49,10 @@ public class GUI extends JFrame implements ActionListener{
         layout.preferredLayoutSize(this.getContentPane());
         setLayout(layout);
     }
+
+    /**
+     * configures and add objects to the GUI Menus
+     */
     private void configureMenus(){
         fileMenuItems = new ArrayList<MenuItem>();
         helpMenuItems = new ArrayList<MenuItem>();
@@ -68,6 +78,10 @@ public class GUI extends JFrame implements ActionListener{
         menuBar.add(helpMenu);
         setMenuBar(menuBar);
     }
+
+    /**
+     * configures all buttons, labels, and textfields and add them to their respective lists
+     */
     private void configureComponents(){
         seed1 = new JTextField("Seed 1",15);
         seed2 = new JTextField("Seed 2",15);
@@ -101,7 +115,7 @@ public class GUI extends JFrame implements ActionListener{
 
         lblSeed1 = new JLabel("P-Seed Value:");
         lblSeed2 = new JLabel("Q-Seed Value:");
-        lblpubM = new JLabel("Encryption Key Modulus");
+        lblpubM = new JLabel("Encryption Key Modulus:");
         lblpubE = new JLabel("Encryption Key Exponent:");
         lblprvM = new JLabel("Decryption Key Modulus:");
         lblprvD= new JLabel("Decryption Key Exponent:");
@@ -113,6 +127,11 @@ public class GUI extends JFrame implements ActionListener{
         labels.add(lblprvD);
 
     }
+
+    /**
+     * configures the layout manager to properly align the various components of the frame using SpringLayout as the
+     * layout manager
+     */
     private void configureLayout(){
         int padding = 10;
         for(JTextField t: textFields){
@@ -133,6 +152,10 @@ public class GUI extends JFrame implements ActionListener{
         padding+=40;
     }
 }
+
+    /**
+     * adds all buttons, labels and textfields to the frame
+     */
     private void addComponents(){
         for (JTextField t: textFields){
         add(t);
@@ -152,16 +175,21 @@ public class GUI extends JFrame implements ActionListener{
         configureLayout();
         setVisible(true);
         }
+
+    /**
+     * overrides actionPerformed method, acts as a listener for all components of the frame, including buttons, textfields,
+     * and menus
+     * @param e the event trigger
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() instanceof MenuItem){
             if(((MenuItem) e.getSource()).getName().equals("inFile")){
-                openSaveDialog = new JFileChooser();
-                openSaveDialog.showOpenDialog(null);
+                openSaveDialog.showOpenDialog(this);
                 inputFile = openSaveDialog.getSelectedFile();
             }
             if(((MenuItem) e.getSource()).getName().equals("outFile")){
-                openSaveDialog.showOpenDialog(null);
+                openSaveDialog.showOpenDialog(this);
                 outputFile = openSaveDialog.getSelectedFile();
             }
             if(((MenuItem) e.getSource()).getName().equals("about")){
@@ -171,14 +199,23 @@ public class GUI extends JFrame implements ActionListener{
 
         if(e.getSource() instanceof JButton){
             if(((JButton) e.getSource()).getName().equals("encryptBtn")){
-                rsaFile = new RSAFile(inputFile,outputFile,new Key(new BigInteger(pubkeyM.getText()),new BigInteger(pubkeyE.getText())));
+
                 try {
+                    rsaFile = new RSAFile(inputFile,outputFile,new Key(new BigInteger(pubkeyM.getText()),new BigInteger(pubkeyE.getText())));
                     rsaFile.openFile();
                     rsaFile.parseFileForEncrypt();
                     rsaFile.encryptFile();
                 }
-                catch(Exception ex){
-
+                catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(this,ex.getMessage() + "\nPlease make sure that both: \n" + lblpubM.getText()
+                    + "\n" + lblpubE.getText() + "\n have correct values entered!");
+                }
+                catch (ArrayIndexOutOfBoundsException ex){
+                    JOptionPane.showMessageDialog(this,ex.getMessage() +"\nIncorrect buffer size, please verify file integrity and restart program");
+                }
+                catch(IOException ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage() + "\nPlease choose the correct file");
+                    openSaveDialog.showOpenDialog(this);
                 }
             }
             if (((JButton) e.getSource()).getName().equals("generateBtn")){
@@ -204,6 +241,10 @@ public class GUI extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * main method that displays a welcome banner and then proceeds to load and display the GUI frame
+     * @param args commandline args
+     */
     public static void main(String[] args) {
         Banner welcome = new Banner("GUI","This program when finished will encrypt a text file and output the result to a new "
                 +"file","wesolowskitj");
@@ -211,6 +252,11 @@ public class GUI extends JFrame implements ActionListener{
         GUI gui = new GUI();
     }
 
+    /**
+     * class that acts as a listener for keystrokes, can be added to a text field via JTextField.addKeyListener()
+     * This implementation filters out any keystroke that is not a number or backspace, allowing only numbers to be inputted
+     * into a textfield
+     */
     public class NumberListener extends KeyAdapter{
         @Override
         public void keyTyped(KeyEvent e) {

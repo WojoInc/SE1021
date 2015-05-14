@@ -27,6 +27,11 @@ public class RSAHelper {
     protected BigInteger totient;
     private ArrayList<Integer> primeList;
 
+    /**
+     * default constructor
+     * @param seed1
+     * @param seed2
+     */
     public RSAHelper(int seed1, int seed2) {
         this.seed1 = seed1;
         this.seed2 = seed2;
