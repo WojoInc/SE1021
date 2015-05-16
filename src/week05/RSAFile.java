@@ -155,7 +155,7 @@ public class RSAFile {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        RSAFile test = new RSAFile(new File("C:\\Users\\Wojo\\Desktop\\test.txt"),new File("C:\\Users\\Wojo\\Desktop\\test2.txt"),new Key(new BigInteger("3233"),new BigInteger("17")));
+        RSAFile test = new RSAFile(new File("C:\\Users\\Wojo\\Desktop\\test.txt"),new File("C:\\Users\\Wojo\\Desktop\\test2.txt"),new Key(new BigInteger("534446993"),new BigInteger("65537")));
         System.out.println(test.rsaHelper.isPrime(65537));
         System.out.println(test.key.toString());
         try {
@@ -165,10 +165,20 @@ public class RSAFile {
             test.encryptFile();
         }
         catch(Exception e){
+            System.out.println(e.getClass());
             System.out.println(e.getMessage());
-            System.out.println("Whoops");
         }
+        test = new RSAFile(new File("C:\\Users\\Wojo\\Desktop\\test2.txt"),new File("C:\\Users\\Wojo\\Desktop\\test3.txt"),new Key(new BigInteger("534446993"),new BigInteger("127620113")));
+        try {
 
+            test.openFile();
+            test.parseFileForDecrypt();
+            test.decryptFile();
+        }
+        catch(Exception e){
+            System.out.println(e.getClass());
+            System.out.println(e.getMessage());
+        }
     }
 
 

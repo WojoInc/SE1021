@@ -40,6 +40,9 @@ public class RSAHelper {
         this(0,0);
     }
 
+    /**
+     * calculates initial values for p,q,modulus, and totient
+     */
     public void calcInitialValues(){
         primeList = condense(sieve(seed1));
         p = BigInteger.valueOf(primeList.get(primeList.size() - 1));
@@ -49,25 +52,58 @@ public class RSAHelper {
         totient = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
 
     }
+
+    /**
+     * generates the value for e. Set static as 65537 for now.
+     */
     public void generateE(){
         e = BigInteger.valueOf(65537);
     }
+
+    /**
+     * generates necessary values for encryption key
+     */
     public void generateEncKey(){
         generateE();
     }
+
+    /**
+     * generates necessary values for decryption key
+     */
     public void generateDecKey(){
         d = e.modInverse(totient);
 
     }
+
+    /**
+     * returns the value of the totient
+     * @return the totient
+     */
     public BigInteger getTotient(){
         return totient;
     }
+
+    /**
+     * returns the encryption keypair
+     * @return the encryption keypair
+     */
     public Key getEncryptionKey(){
         return new Key(n,e);
     }
+
+    /**
+     * returns the decryption leypair
+     * @return the decryption keypair
+     */
     public Key getDecryptionKey(){
         return new Key(n,d);
     }
+
+    /**
+     * returns whether or not the specified value is prime
+     * @param value the value to test
+     * @return result
+     */
     public boolean isPrime(int value){
         ArrayList<Integer> temp = condense(sieve(value+1));
         boolean prime =false;
@@ -76,6 +112,12 @@ public class RSAHelper {
         }
         return prime;
     }
+
+    /**
+     * removesany nonprime values from an array
+     * @param primes the array to be condensed
+     * @return the resulting condensed array
+     */
     public ArrayList<Integer> condense(int [] primes){
         ArrayList<Integer> primeArray = new ArrayList<Integer>();
         for(Integer i: primes){
@@ -121,6 +163,13 @@ public class RSAHelper {
         }
         return primes;
     }
+
+    /**
+     * computes the greatest common divisor for two numbers
+     * @param x
+     * @param y
+     * @return the GCD(X,Y)
+     */
     private BigInteger gcd(BigInteger x, BigInteger y) {
         if (y.equals(BigInteger.ZERO)) {
             return x;
@@ -159,6 +208,13 @@ public class RSAHelper {
         return modExpo(input, decKey);
     }
 
-
+    public static void main(String[] args) {
+        RSAHelper helper = new RSAHelper(23,17);
+        helper.calcInitialValues();
+        helper.generateEncKey();
+        helper.generateDecKey();
+        System.out.println(helper.getEncryptionKey());
+        System.out.println(helper.getDecryptionKey());
+    }
 
 }

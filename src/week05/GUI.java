@@ -208,7 +208,7 @@ public class GUI extends JFrame implements ActionListener{
                 }
                 catch (NumberFormatException ex){
                     JOptionPane.showMessageDialog(this,ex.getMessage() + "\nPlease make sure that both: \n" + lblpubM.getText()
-                    + "\n" + lblpubE.getText() + "\n have correct values entered!");
+                    + "\n" + lblpubE.getText() + "\nhave correct values entered!");
                 }
                 catch (ArrayIndexOutOfBoundsException ex){
                     JOptionPane.showMessageDialog(this,ex.getMessage() +"\nIncorrect buffer size, please verify file integrity and restart program");
@@ -219,23 +219,42 @@ public class GUI extends JFrame implements ActionListener{
                 }
             }
             if (((JButton) e.getSource()).getName().equals("generateBtn")){
-                rsaHelper = new RSAHelper(Integer.parseInt(seed1.getText()),Integer.parseInt(seed2.getText()));
-                rsaHelper.calcInitialValues();
-                rsaHelper.generateEncKey();
-                rsaHelper.generateDecKey();
-                pubkeyM.setText(rsaHelper.getEncryptionKey().getN().toString());
-                pubkeyE.setText(rsaHelper.getEncryptionKey().getE().toString());
-                privkeyM.setText(rsaHelper.getDecryptionKey().getN().toString());
-                privKeyD.setText(rsaHelper.getDecryptionKey().getE().toString());
+                try {
+                    rsaHelper = new RSAHelper(Integer.parseInt(seed1.getText()), Integer.parseInt(seed2.getText()));
+                    rsaHelper.calcInitialValues();
+                    rsaHelper.generateEncKey();
+                    rsaHelper.generateDecKey();
+                    pubkeyM.setText(rsaHelper.getEncryptionKey().getN().toString());
+                    pubkeyE.setText(rsaHelper.getEncryptionKey().getE().toString());
+                    privkeyM.setText(rsaHelper.getDecryptionKey().getN().toString());
+                    privKeyD.setText(rsaHelper.getDecryptionKey().getE().toString());
+                }
+                catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(this,"Please verify that both:\n" + lblSeed1.getText() + "\n" + lblSeed2.getText() + "\nHave correct numerical values entered!");
+                }
+                catch (NullPointerException ex){
+
+                }
+
             }
             if(((JButton) e.getSource()).getName().equals("decryptBtn")){
-                rsaFile = new RSAFile(inputFile,outputFile,new Key(new BigInteger(privkeyM.getText()),new BigInteger(privKeyD.getText())));
+
                 try{
+                    rsaFile = new RSAFile(inputFile,outputFile,new Key(new BigInteger(privkeyM.getText()),new BigInteger(privKeyD.getText())));
                     rsaFile.openFile();
                     rsaFile.parseFileForDecrypt();
                     rsaFile.decryptFile();
-                }catch(Exception ex){
-
+                }
+                catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(this,ex.getMessage() + "\nPlease make sure that both: \n" + lblprvM.getText()
+                            + "\n" + lblprvD.getText() + "\nhave correct values entered!");
+                }
+                catch (ArrayIndexOutOfBoundsException ex){
+                    JOptionPane.showMessageDialog(this,ex.getMessage() +"\nIncorrect buffer size, please verify file integrity and restart program");
+                }
+                catch(IOException ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage() + "\nPlease choose the correct file");
+                    openSaveDialog.showOpenDialog(this);
                 }
             }
         }
